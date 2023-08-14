@@ -10,26 +10,32 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const url = process.env.API_ENDPOINT;
+import { IProperty } from './types/property.interface'
 
 function App(): any {
-  const [data, setData]: any[] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<IProperty[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const seePrice = (price: string) => {
-
     alert(price)
+  }
 
+  const getProperties = () =>{ 
+    try {
+          fetch(`http://localhost:3001/api/properties`)
+          .then((response) => response.json())
+          .then((items) => setData(items.data))
+          setLoading(false)
+        } catch(e: any) {
+          console.log(e)
+          setLoading(false)
+        }
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/properties`)
-      .then((response) => response.json())
-      .then((items) => setData(items.data));
+    getProperties();
   }, []);
 
-  console.log(data);
   return (
     <div className="App">
       <header className="App-header">
@@ -38,6 +44,11 @@ function App(): any {
       </header>
 
       <h3 className="App-subtitle">Property Listings Below</h3>
+      <div>
+      {loading && (
+        <div className="App-loading"><p>Loading... </p></div>
+      )}
+      </div>
       <Box>
         <Grid container sx={{ mx: {xs: '0%', sm: '10%'}, width: {xs: '100%', sm: '80%'} }}>
           {data &&

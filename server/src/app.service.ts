@@ -65,6 +65,6 @@ export class AppService {
       data = properties.push(property)
       message = "property created"
 
-    return { mesage: message, id: property.id  }
+    return { message: message, id: property.id  }
   }
 }
